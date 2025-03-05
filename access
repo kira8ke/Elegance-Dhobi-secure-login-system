@@ -1,0 +1,12 @@
+<!-- # Prevent direct access to PHP files
+#
+<FilesMatch "config.php">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Protect database folder
+<Directory "db">
+    Order Deny,Allow
+    Deny from all
+</Directory> -->
