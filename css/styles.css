@@ -1,38 +1,57 @@
+/* Import Inter Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #20a9e3;
-    text-align: center;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom, #2478B3, white);
+    color: #0A253E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
 }
 
-form {
+.container {
+    text-align: center;
     background: white;
     padding: 20px;
-    width: 300px;
-    margin: 50px auto;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
 }
 
+/* Buttons */
+button {
+    background-color: white;
+    color: #2478B3;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px;
+    border: 2px solid #2478B3;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #0A253E;
+    color: white;
+}
+
+/* Input Fields */
 input {
     width: 90%;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #2478B3;
+    border-radius: 5px;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    background: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #0056b3;
+/* Toggle Buttons */
+.toggle-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
