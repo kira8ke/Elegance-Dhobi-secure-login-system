@@ -3,17 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elegance Dhobi</title>
+    <title>Elegance Dhobi - Login & Registration</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
         <h2>Welcome to Elegance Dhobi</h2>
-        <form action="login.php" method="post">
+
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button onclick="showLogin()">Login</button>
+            <button onclick="showRegister()">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" action="login.php" method="post">
+            <h3>Login</h3>
             <input type="text" name="username" placeholder="Enter Username" required>
             <input type="password" name="password" placeholder="Enter Password" required>
             <button type="submit">Login</button>
         </form>
+
+        <!-- Registration Form -->
+        <form id="register-form" action="register.php" method="post" style="display: none;">
+            <h3>Register</h3>
+            <input type="text" name="username" placeholder="Enter Username" required>
+            <input type="email" name="email" placeholder="Enter Email" required>
+            <input type="password" name="password" placeholder="Enter Password" required>
+            <button type="submit">Register</button>
+        </form>
     </div>
+
+    <script>
+        function showLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
