@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p class="message"><?= $message; ?></p>
         <?php endif; ?>
 
-        <!-- Registration Form (Ensuring it appears once) -->
+        <!-- Registration Form -->
         <form method="POST">
             <input type="text" name="username" required placeholder="Username">
             <input type="email" name="email" required placeholder="Email">
