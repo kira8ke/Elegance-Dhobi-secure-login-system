@@ -2,8 +2,11 @@
 // Start session
 session_start();
 
-// Include the database configuration file
+// Include database configuration
 require 'config.php';
+
+// Variable to store error or success messages
+$message = "";
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -14,44 +17,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die("Invalid email format.");
-    }
-
-    // Check if username or email already exists
-    $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-    $check_stmt->bind_param("ss", $username, $email);
-    $check_stmt->execute();
-    $check_stmt->store_result();
-
-    if ($check_stmt->num_rows > 0) {
-        // User already exists
-        echo "User already registered. Please <a href='login.php'>login</a>.";
-        $check_stmt->close();
+        $message = "Invalid email format.";
     } else {
-        $check_stmt->close();
+        // Check if username or email already exists
+        $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        $check_stmt->bind_param("ss", $username, $email);
+        $check_stmt->execute();
+        $check_stmt->store_result();
 
-        // Hash password before storing it
-        $password_hash = password_hash($password, PASSWORD_BCRYPT);
-
-        // Prepare an SQL statement to insert the new user
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-
-        if ($stmt === false) {
-            die("Error in SQL query preparation: " . $conn->error);
-        }
-
-        // Bind values to the statement
-        $stmt->bind_param("sss", $username, $email, $password_hash);
-
-        // Execute the query
-        if ($stmt->execute()) {
-            echo "Registration successful! <a href='login.php'>Login</a>";
+        if ($check_stmt->num_rows > 0) {
+            // User already exists
+            $message = "User already registered. Please <a href='login.php'>Login</a>.";
         } else {
-            echo "Error: " . $stmt->error;
-        }
+            $check_stmt->close();
 
-        // Close the statement
-        $stmt->close();
+            // Hash password before storing
+            $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+            // Insert new user
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+
+            if ($stmt === false) {
+                die("Error in SQL query preparation: " . $conn->error);
+            }
+
+            $stmt->bind_param("sss", $username, $email, $password_hash);
+
+            if ($stmt->execute()) {
+                // Redirect to login page with success message
+                header("Location: login.php?success=registered");
+                exit();
+            } else {
+                $message = "Error: " . $stmt->error;
+            }
+
+            $stmt->close();
+        }
     }
 }
 ?>
@@ -68,7 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h2>Register</h2>
 
-        <!-- Registration Form -->
+        <!-- Show error/success message if any -->
+        <?php if (!empty($message)): ?>
+            <p class="message"><?= $message; ?></p>
+        <?php endif; ?>
+
+        <!-- Registration Form (Ensuring it appears once) -->
         <form method="POST">
             <input type="text" name="username" required placeholder="Username">
             <input type="email" name="email" required placeholder="Email">
