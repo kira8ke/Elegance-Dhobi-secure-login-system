@@ -3,32 +3,47 @@ session_start();
 require 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
+    $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
     $password = $_POST["password"];
-    
-    $stmt = $conn->prepare("SELECT id, password_hash FROM users WHERE email = ?");
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("Invalid email format.");
+    }
+
+    // Prepare and execute the query
+    $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $result = $stmt->get_result()->fetch_assoc();
-    
-    if ($result && password_verify($password, $result['password_hash'])) {
-        $_SESSION['user_id'] = $result['id'];
-        setcookie("auth", session_id(), time() + 3600, "", "", true, true);
-        header("Location: dashboard.php");
-        exit;
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($id, $hashed_password);
+        $stmt->fetch();
+
+        if (password_verify($password, $hashed_password)) {
+            $_SESSION["user_id"] = $id;
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            echo "Invalid email or password.";
+        }
     } else {
-        echo "Invalid login credentials";
+        echo "User not found.";
     }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Login - Elegance Dhobi</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
+    <h2>Login</h2>
     <form method="POST">
         <input type="email" name="email" required placeholder="Email">
         <input type="password" name="password" required placeholder="Password">
