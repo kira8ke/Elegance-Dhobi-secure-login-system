@@ -1,48 +1,44 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elegance Dhobi - Login & Registration</title>
+    <title>Elegance Dhobi - Login</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
-        <h2>Welcome to Elegance Dhobi</h2>
-
-        <!-- Toggle Buttons -->
-        <div class="toggle-buttons">
-            <button onclick="showLogin()">Login</button>
-            <button onclick="showRegister()">Register</button>
-        </div>
-
-        <!-- Login Form -->
-        <form id="login-form" action="login.php" method="post">
-            <h3>Login</h3>
-            <input type="text" name="email" placeholder="Enter email" required>
-            <input type="password" name="password" placeholder="Enter Password" required>
+        <h2>Login</h2>
+        <form action="login.php" method="POST">
+            <input type="email" name="email" required placeholder="Email">
+            <input type="password" name="password" required placeholder="Password">
             <button type="submit">Login</button>
         </form>
+        
+        <p>Don't have an account? <button onclick="showRegister()">Register</button></p>
+    </div>
 
-        <!-- Registration Form -->
-        <form id="register-form" action="register.php" method="post" style="display: none;">
-            <h3>Register</h3>
-            <input type="text" name="username" placeholder="Enter Username" required>
-            <input type="email" name="email" placeholder="Enter Email" required>
-            <input type="password" name="password" placeholder="Enter Password" required>
-            <button type="submit">Register</button>
-        </form>
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideRegister()">&times;</span>
+            <h2>Register</h2>
+            <form action="register.php" method="POST">
+                <input type="email" name="email" required placeholder="Email">
+                <input type="password" name="password" required placeholder="Password">
+                <button type="submit">Register</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        function showLogin() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('register-form').style.display = 'none';
-        }
-
         function showRegister() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('register-form').style.display = 'block';
+            document.getElementById('registerModal').style.display = 'block';
+        }
+        function hideRegister() {
+            document.getElementById('registerModal').style.display = 'none';
         }
     </script>
 </body>

@@ -1,65 +1,64 @@
 <?php
+// Start the session
 session_start();
+
+// Include the database configuration file
 require 'config.php';
 
+// Check if the form was submitted using the POST method
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and validate inputs
+    // Sanitize and validate email input
     $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
-    $username = htmlspecialchars(trim($_POST["username"]));
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("Invalid email format"); // Stop execution if email format is incorrect
+    }
+
+    // Retrieve the password from the form
     $password = $_POST["password"];
 
-    // Validate email format
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die("Invalid email format.");
-    }
-
-    // Validate password strength
-    if (strlen($password) < 6) {
-        die("Password must be at least 6 characters long.");
-    }
-
-    // Check if user already exists
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        die("Email is already registered. <a href='login.php'>Login here</a>");
-    }
-    $stmt->close();
-
-    // Hash password securely
+    // Hash the password before storing it in the database
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
-    // Insert user into the database
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $password_hash);
+    // Prepare an SQL statement to insert the new user into the database
+    $stmt = $conn->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
 
+    // Bind the user input values to the SQL statement
+    $stmt->bind_param("ss", $email, $password_hash);
+
+    // Execute the query
     if ($stmt->execute()) {
-        echo "Registration successful! <a href='login.php'>Login here</a>";
+        echo "Registration successful! <a href='login.php'>Login</a>"; // Redirect to login after registration
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error: Could not register user."; // Display error message if query fails
     }
 
+    // Close the statement
     $stmt->close();
-    $conn->close();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Elegance Dhobi</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css"> <!-- Link to external CSS -->
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="POST">
-        <input type="text" name="username" required placeholder="Username">
-        <input type="email" name="email" required placeholder="Email">
-        <input type="password" name="password" required placeholder="Password">
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+    <div class="container">
+        <h2>Register</h2>
+
+        <!-- Registration Form -->
+        <form method="POST">
+        
+            <input type="email" name="email" required placeholder="Email">
+            <input type="password" name="password" required placeholder="Password">
+            <button type="submit">Register</button>
+        </form>
+
+        
+
+
+
