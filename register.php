@@ -1,42 +1,58 @@
 <?php
-// Start the session
+// Start session
 session_start();
 
 // Include the database configuration file
 require 'config.php';
 
-// Check if the form was submitted using the POST method
+// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize user inputs
-    $username = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
+    // Sanitize inputs
+    $username = trim($_POST["username"]);
     $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
-    
-    // Validate email format
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die("Invalid email format");
-    }
-
-    // Retrieve password from the form
     $password = $_POST["password"];
 
-    // Hash the password before storing it
-    $password_hash = password_hash($password, PASSWORD_BCRYPT);
-
-    // Prepare an SQL statement to insert the new user
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    
-    // Bind the values
-    $stmt->bind_param("sss", $username, $email, $password_hash);
-
-    // Execute the query
-    if ($stmt->execute()) {
-        echo "Registration successful! <a href='login.php'>Login</a>";
-    } else {
-        echo "Error: Could not register user.";
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        die("Invalid email format.");
     }
 
-    // Close the statement
-    $stmt->close();
+    // Check if username or email already exists
+    $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+    $check_stmt->bind_param("ss", $username, $email);
+    $check_stmt->execute();
+    $check_stmt->store_result();
+
+    if ($check_stmt->num_rows > 0) {
+        // User already exists
+        echo "User already registered. Please <a href='login.php'>login</a>.";
+        $check_stmt->close();
+    } else {
+        $check_stmt->close();
+
+        // Hash password before storing it
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+        // Prepare an SQL statement to insert the new user
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+
+        if ($stmt === false) {
+            die("Error in SQL query preparation: " . $conn->error);
+        }
+
+        // Bind values to the statement
+        $stmt->bind_param("sss", $username, $email, $password_hash);
+
+        // Execute the query
+        if ($stmt->execute()) {
+            echo "Registration successful! <a href='login.php'>Login</a>";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        // Close the statement
+        $stmt->close();
+    }
 }
 ?>
 
@@ -54,20 +70,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Registration Form -->
         <form method="POST">
-            <!-- Username Input Field -->
             <input type="text" name="username" required placeholder="Username">
-
-            <!-- Email Input Field -->
             <input type="email" name="email" required placeholder="Email">
-
-            <!-- Password Input Field -->
             <input type="password" name="password" required placeholder="Password">
-
-            <!-- Register Button -->
             <button type="submit">Register</button>
         </form>
 
-        <!-- Link to Login Page -->
         <p>Already have an account? <a href="login.php">Login</a></p>
     </div>
 </body>
