@@ -21,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
     // Prepare an SQL statement to insert the new user into the database
-    $stmt = $conn->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO users (username,email, password) VALUES (?, ?)");
 
     // Bind the user input values to the SQL statement
-    $stmt->bind_param("ss", $email, $password_hash);
+    $stmt->bind_param("ss",$username, $email, $password_hash);
 
     // Execute the query
     if ($stmt->execute()) {
@@ -52,7 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Registration Form -->
         <form method="POST">
-        
+            
+            <input type="username" name="username" required placeholder="Username">
             <input type="email" name="email" required placeholder="Email">
             <input type="password" name="password" required placeholder="Password">
             <button type="submit">Register</button>
