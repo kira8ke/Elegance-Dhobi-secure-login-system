@@ -2,15 +2,69 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
 /* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth; /* Smooth scrolling */
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background: linear-gradient(to bottom, #2478B3, white);
     color: #0A253E;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
-    margin: 0;
+    padding-top: 70px; /* Prevent content from hiding behind the fixed navbar */
+}
+
+/* Navigation Bar */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 15px 0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #2478B3;
+    font-weight: 600;
+    padding-bottom: 5px;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+    color: #0A253E;
+}
+
+/* Underline effect for active section */
+nav ul li a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 3px;
+    background: #2478B3;
 }
 
 /* Container for Forms */
@@ -87,23 +141,37 @@ header {
     text-align: center;
     background: #2478B3;
     color: white;
-    padding: 20px;
-    font-size: 22px;
+    padding: 40px;
+    font-size: 24px;
     font-weight: 600;
 }
 
-section {
-    padding: 20px;
-    margin: 20px auto;
+/* Section Styling */
+.section {
+    padding: 40px;
+    margin: 40px auto;
     width: 90%;
     max-width: 800px;
     background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0; /* Initially hidden */
+    transform: translateY(40px); /* Flow-in effect */
+    transition: opacity 1s ease-out, transform 1s ease-out;
 }
 
-section h2 {
+/* Make sections visible when scrolled into view */
+.section:target {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Section Headings */
+.section h2 {
     color: #2478B3;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
 /* Footer */
