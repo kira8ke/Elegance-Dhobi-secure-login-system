@@ -1,4 +1,3 @@
-/* Import Inter Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
 /* General Styles */
@@ -14,99 +13,95 @@ body {
     background: linear-gradient(to bottom, #2478B3, white);
     color: #0A253E;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     min-height: 100vh;
 }
 
-/* Navigation Bar */
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+/* Container (Login Box) */
+.container {
     background: white;
-    padding: 15px 0;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-nav ul {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-}
-
-nav ul li {
-    margin: 0 15px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #2478B3;
-    font-weight: 600;
-    padding-bottom: 5px;
-    position: relative;
-    transition: color 0.3s ease-in-out;
-}
-
-nav ul li a:hover {
-    color: #0A253E;
-}
-
-/* Header */
-header {
-    text-align: center;
-    background: #2478B3;
-    color: white;
-    padding: 40px;
-    font-size: 24px;
-    font-weight: 600;
-    width: 100%;
-}
-
-/* Sections */
-.section {
-    padding: 40px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 800px;
-    background: white;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 1s ease-in-out forwards;
-}
-
-/* Delay animations for each section */
-.section:nth-child(1) { animation-delay: 0.3s; }
-.section:nth-child(2) { animation-delay: 0.6s; }
-.section:nth-child(3) { animation-delay: 0.9s; }
-.section:nth-child(4) { animation-delay: 1.2s; }
-.section:nth-child(5) { animation-delay: 1.5s; }
-.section:nth-child(6) { animation-delay: 1.8s; }
-
-/* Keyframes for scrolling effect */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Footer */
-footer {
     text-align: center;
-    padding: 10px;
-    margin-top: 20px;
-    background: #0A253E;
-    color: white;
+    width: 100%;
+    max-width: 400px;
 }
 
+/* Form Inputs */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+button {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Buttons */
+button {
+    background-color: #2478B3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0A253E;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Success Message */
 .success-message {
     background-color: #dff0d8;
     color: #3c763d;
